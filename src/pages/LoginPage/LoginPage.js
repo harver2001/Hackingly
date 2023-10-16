@@ -2,12 +2,29 @@ import React, { useState } from 'react'
 import loginFormImage from "../../assets/images/loginImage.png";
 import LoginPageNavBar from '../../components/navbars/LoginPageNavbar';
 import ReCAPTCHA from "react-google-recaptcha";
+import { useAuth } from '../../Providers/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [valid,setValid] = useState(false);
+
+  const { setToken } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    //Set Token after successful login
+    //Also provide a fallback for unsuccessful login attempts
+    setToken("JWT Token Here");
+    //navigate to routeForAuthenticatedOnly
+    navigate("/", { replace: true });
+    //Beyond this, whenever an API request is required, just use axios.get or post or as required since the token has been set in the header for axios.
+
+  };
+
   function onChange(){
     setValid(true);
   }
+
   return (
     <div>
       <LoginPageNavBar />
@@ -28,7 +45,12 @@ const LoginPage = () => {
                 onChange={onChange}
               />
               <br />
-              <button className="w-3/5 px-4 py-2 font-medium text-white bg-[#5161e9] rounded-lg hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50" type="submit" disabled={!valid}>Log In</button>
+              <button 
+                className="w-3/5 px-4 py-2 font-medium text-white bg-[#5161e9] rounded-lg hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50" 
+                type="submit" 
+                disabled={false}
+                onClick={handleLogin}
+              >Log In</button>
             </form>
           </div>
         </div>
